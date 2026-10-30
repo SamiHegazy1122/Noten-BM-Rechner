@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;700&display=swap");
+
 :root {
     --schwarz: #111;
     --grau: #6b7280;
@@ -11,10 +13,12 @@
 
 body {
     margin: 0;
-    font-family: system-ui, sans-serif;
+    font-family: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
     background: var(--hellgrau);
     color: var(--schwarz);
 }
+
+button, input { font-family: inherit; }
 
 header {
     background: var(--schwarz);
@@ -32,11 +36,16 @@ main {
     padding: 16px;
 }
 
+h1, .schnitt {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
 .kreuz {
     display: inline-block;
     background: var(--rot);
     color: white;
-    font-weight: 900;
+    font-weight: 700;
     padding: 2px 10px;
     border-radius: 6px;
 }
@@ -113,20 +122,17 @@ button {
 
 button:hover { background: #333; }
 
-/* Resultat */
 .bestanden { border-left: 5px solid var(--gruen); }
 .durchgefallen { border-left: 5px solid var(--rot); }
 
 .status { font-weight: bold; margin: 0; }
 .bestanden .status { color: var(--gruen); }
 .durchgefallen .status { color: var(--rot); }
-.schnitt { font-size: 2.5rem; font-weight: bold; margin: 4px 0; }
+.schnitt { font-size: 2.5rem; margin: 4px 0; }
 
 ul { list-style: none; padding: 0; }
 .fachnoten li { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--linie); }
-
 .ok { color: var(--gruen); }
 .nok { color: var(--rot); }
-
 .hinweis, .fussnote { color: var(--grau); }
 .fussnote { font-size: 0.8rem; text-align: center; }
