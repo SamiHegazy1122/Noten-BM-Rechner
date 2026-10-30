@@ -1,0 +1,81 @@
+body {
+    font-family: system-ui, sans-serif;
+    background: #f4f5f7;
+    color: #222;
+    margin: 0;
+}
+
+main {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+a {
+    color: #2563eb;
+}
+
+.auswahl {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.karte {
+    display: block;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+input {
+    width: 60px;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+button {
+    width: 100%;
+    margin-top: 16px;
+    padding: 12px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.resultat {
+    margin-top: 20px;
+    padding: 16px;
+    background: white;
+    border-radius: 10px;
+}
+
+.ok {
+    color: #16a34a;
+    font-weight: bold;
+}
+
+.nok {
+    color: #dc2626;
+    font-weight: bold;
+}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noten-BM-Rechner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main>
+        <a href="/">← Zurück</a>
+        <h1>{{ ausbildung | upper }}</h1>
+
+        <form method="post">
+            <table>
+                <tr>
+                    <th>Fach</th>
+                    <th>Erfahrung</th>
+                    <th>Prüfung</th>
+                </tr>
+
+                {% for fach in faecher %}
+                <tr>
+                    <td>{{ fach.name }}</td>
+                    <td>
+                        <input type="number" step="0.1" min="1" max="6"
+                               name="{{ fach.id }}_erfahrung"
+                               value="{{ request.form.get(fach.id + '_erfahrung', '') }}">
+                    </td>
+                    <td>
+                        {% if fach.pruefung %}
+                        <input type="number" step="0.1" min="1" max="6"
+                               name="{{ fach.id }}_pruefung"
+                               value="{{ request.form.get(fach.id + '_pruefung', '') }}">
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            <button type="submit">Berechnen</button>
+        </form>
+
+        {% if resultat %}
+        <section class="resultat">
+            <h2>Gesamtnote: {{ resultat.gesamtnote }}</h2>
+
+            {% if resultat.bestanden %}
+                <p class="ok">Bestanden</p>
+            {% else %}
+                <p class="nok">Nicht bestanden</p>
+                {% for grund in resultat.gruende %}
+                    <p>- {{ grund }}</p>
+                {% endfor %}
+            {% endif %}
+        </section>
+        {% endif %}
+    </main>
+</body>
+</html>

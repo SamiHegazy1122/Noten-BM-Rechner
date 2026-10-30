@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noten-BM-Rechner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main>
+        <h1>Noten-BM-Rechner</h1>
+        <p>Wähle deine Ausbildung:</p>
+
+        <div class="auswahl">
+            {% for ausbildung in ausbildungen %}
+                <a class="karte" href="{{ url_for('rechner', ausbildung=ausbildung) }}">
+                    {{ ausbildung | upper }}
+                </a>
+            {% endfor %}
+        </div>
+    </main>
+</body>
+</html>
