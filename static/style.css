@@ -1,81 +1,113 @@
-body {
-    font-family: system-ui, sans-serif;
-    background: #f4f5f7;
-    color: #222;
-    margin: 0;
+:root {
+    --akzent: #d52b1e;
+    --schwarz: #080808;
+    --grau: #6b7280;
+    --linie: #eee;
 }
 
-main {
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    background: white;
+    color: #111;
+}
+
+header, main {
     max-width: 600px;
     margin: 0 auto;
-    padding: 16px;
+    padding: 24px 16px;
 }
 
-a {
-    color: #2563eb;
+main { padding-top: 0; }
+header h1 { margin: 8px 0 4px; }
+header p, .karte span, .fussnote, .hinweis { color: var(--grau); }
+
+.kreuz {
+    display: inline-block;
+    background: var(--akzent);
+    color: white;
+    font-weight: 900;
+    padding: 2px 10px;
+    border-radius: 6px;
 }
 
+a { color: var(--akzent); text-decoration: none; }
+
+h2 { font-size: 0.8rem; color: var(--grau); text-transform: uppercase; }
+
+/* Startseite */
 .auswahl {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
 }
 
 .karte {
-    display: block;
-    padding: 20px;
-    background: white;
-    border-radius: 10px;
-    text-align: center;
-    font-size: 1.3rem;
-    font-weight: bold;
-    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    border: 1px solid var(--linie);
+    border-radius: 14px;
+    color: #111;
+    hyphens: auto;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
+.karte:hover { border-color: var(--akzent); }
+
+/* Rechner */
+.zeile {
+    display: grid;
+    grid-template-columns: 1fr 70px 70px;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--linie);
 }
 
-th, td {
-    padding: 8px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-}
+.kopf { font-size: 0.75rem; color: var(--grau); }
 
 input {
-    width: 60px;
-    padding: 6px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    width: 100%;
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
 }
+
+.leer { text-align: center; color: var(--grau); }
 
 button {
     width: 100%;
     margin-top: 16px;
-    padding: 12px;
-    background: #2563eb;
+    padding: 14px;
+    background: var(--akzent);
     color: white;
     border: none;
-    border-radius: 10px;
-    font-size: 1rem;
+    border-radius: 12px;
+    font-weight: bold;
     cursor: pointer;
 }
 
+/* Resultat */
 .resultat {
-    margin-top: 20px;
-    padding: 16px;
-    background: white;
-    border-radius: 10px;
+    margin-top: 24px;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
-.ok {
-    color: #16a34a;
-    font-weight: bold;
-}
+.status { font-weight: bold; margin: 0; }
+.bestanden .status { color: var(--gruen); }
+.durchgefallen .status { color: var(--akzent); }
+.schnitt { font-size: 2.5rem; font-weight: bold; margin: 4px 0; }
 
-.nok {
-    color: #dc2626;
-    font-weight: bold;
-}
+ul { list-style: none; padding: 0; }
+.fachnoten li { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--linie); }
+
+.ok { color: var(--gruen); }
+.nok { color: var(--akzent); }
+
+.fussnote { font-size: 0.8rem; text-align: center; }
