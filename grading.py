@@ -1,23 +1,119 @@
 import math
 
-AUSBILDUNGEN = {
-    "bm": [
-        {"id": "deutsch", "name": "Deutsch", "pruefung": True},
-        {"id": "franzoesisch", "name": "Französisch", "pruefung": True},
-        {"id": "englisch", "name": "Englisch", "pruefung": True},
-        {"id": "mathe", "name": "Mathematik", "pruefung": True},
-        {"id": "frw", "name": "Finanz- und Rechnungswesen", "pruefung": True},
-        {"id": "wr", "name": "Wirtschaft und Recht", "pruefung": True},
-        {"id": "gp", "name": "Geschichte und Politik", "pruefung": False},
-        {"id": "tu", "name": "Technik und Umwelt", "pruefung": False},
-        {"id": "idpa", "name": "IDPA", "pruefung": False},
-    ],
-}
 
-REGELN = {
-    "min_gesamt": 4.0, # Gesamtnote mindestens 4.0
-    "max_unter_4": 2,  # Höchstens 2 Fachnoten unter 4
-    "max_abweichung": 2.0, # Summe der Abweichungen unter 4 höchstens 2.0
+def fach(name, pruefung=False):
+    return {"name": name, "pruefung": pruefung}
+
+
+# Fächer aus dem Kanton Aargau
+KATEGORIEN = {
+    "gymnasium": {
+        "name": "Gymnasium (Kanti)",
+        "abschluss": "Gymnasiale Maturität",
+        "gruppe": "Mittelschule",
+        "regel": "matur",
+        "faecher": [
+            fach("Deutsch", True),
+            fach("Französisch", True),
+            fach("Englisch", True),
+            fach("Mathematik", True),
+            fach("Biologie"),
+            fach("Chemie"),
+            fach("Physik"),
+            fach("Geschichte"),
+            fach("Geografie"),
+            fach("Bildnerisches Gestalten / Musik"),
+            fach("Schwerpunktfach", True),
+            fach("Ergänzungsfach"),
+            fach("Maturaarbeit"),
+        ],
+    },
+    "wms": {
+        "name": "WMS",
+        "abschluss": "Wirtschaftsmittelschule – BM Wirtschaft",
+        "gruppe": "Mittelschule",
+        "regel": "bm",
+        "faecher": [
+            fach("Deutsch", True),
+            fach("Französisch", True),
+            fach("Englisch", True),
+            fach("Mathematik", True),
+            fach("Finanz- und Rechnungswesen", True),
+            fach("Wirtschaft und Recht", True),
+            fach("Geschichte und Politik"),
+            fach("Technik und Umwelt"),
+            fach("Interdisziplinäres Arbeiten (IDAF/IDPA)"),
+        ],
+    },
+    "ims": {
+        "name": "IMS",
+        "abschluss": "Informatikmittelschule – BM Wirtschaft",
+        "gruppe": "Mittelschule",
+        "regel": "bm",
+        "faecher": [
+            fach("Deutsch", True),
+            fach("Französisch", True),
+            fach("Englisch", True),
+            fach("Mathematik", True),
+            fach("Finanz- und Rechnungswesen", True),
+            fach("Wirtschaft und Recht", True),
+            fach("Geschichte und Politik"),
+            fach("Technik und Umwelt"),
+            fach("Interdisziplinäres Arbeiten (IDAF/IDPA)"),
+        ],
+    },
+    "fms": {
+        "name": "FMS",
+        "abschluss": "Fachmittelschulausweis",
+        "gruppe": "Mittelschule",
+        "regel": "fms",
+        "faecher": [
+            fach("Deutsch", True),
+            fach("Französisch", True),
+            fach("Englisch", True),
+            fach("Mathematik", True),
+            fach("Biologie"),
+            fach("Chemie"),
+            fach("Physik"),
+            fach("Geschichte"),
+            fach("Geografie"),
+            fach("Berufsfeldfach", True),
+            fach("Selbständige Arbeit"),
+        ],
+    },
+    "bm-wirtschaft": {
+        "name": "BM Wirtschaft",
+        "abschluss": "Berufsmaturität für Lernende (BM1/BM2)",
+        "gruppe": "Berufslehre",
+        "regel": "bm",
+        "faecher": [
+            fach("Deutsch", True),
+            fach("Französisch", True),
+            fach("Englisch", True),
+            fach("Mathematik", True),
+            fach("Finanz- und Rechnungswesen", True),
+            fach("Wirtschaft und Recht", True),
+            fach("Geschichte und Politik"),
+            fach("Technik und Umwelt"),
+            fach("Interdisziplinäres Arbeiten (IDAF/IDPA)"),
+        ],
+    },
+    "bm-technik": {
+        "name": "BM Technik",
+        "abschluss": "Berufsmaturität für Lernende (BM1/BM2)",
+        "gruppe": "Berufslehre",
+        "regel": "bm",
+        "faecher": [
+            fach("Deutsch", True),
+            fach("Französisch", True),
+            fach("Englisch", True),
+            fach("Mathematik", True),
+            fach("Naturwissenschaften", True),
+            fach("Geschichte und Politik"),
+            fach("Wirtschaft und Recht"),
+            fach("Interdisziplinäres Arbeiten (IDAF/IDPA)"),
+        ],
+    },
 }
 
 
@@ -37,32 +133,45 @@ def fachnote(erfahrungsnote, pruefungsnote):
     return runde_halbe((erfahrungsnote + pruefungsnote) / 2)
 
 
-def berechne(noten):
+def pruefe_regeln(regel, werte, durchschnitt):
+    unter_4 = [n for n in werte if n < 4]
+    minus = sum(4 - n for n in unter_4)
+    plus = sum(n - 4 for n in werte if n > 4)
+
+    if regel == "matur":
+        return [
+            ("Höchstens 4 Noten unter 4", len(unter_4) <= 4),
+            ("Minuspunkte doppelt kompensiert", 2 * minus <= plus),
+        ]
+
+    max_unter_4 = 3 if regel == "fms" else 2
+    return [
+        ("Durchschnitt mindestens 4.0", durchschnitt >= 4),
+        (f"Höchstens {max_unter_4} Noten unter 4", len(unter_4) <= max_unter_4),
+        ("Minuspunkte höchstens 2.0", minus <= 2),
+    ]
+
+
+def berechne(noten, regel):
+    # noten = [{"name": "Deutsch", "erfahrungsnote": 4.5, "pruefungsnote": 5.0}, ...]
     fachnoten = {}
-    for fach in noten:
-        note = fachnote(fach["erfahrungsnote"], fach["pruefungsnote"])
+    for f in noten:
+        note = fachnote(f["erfahrungsnote"], f["pruefungsnote"])
         if note is not None:
-            fachnoten[fach["name"]] = note
+            fachnoten[f["name"]] = note
 
     if not fachnoten:
         return None
 
     werte = list(fachnoten.values())
-    gesamtnote = runde_zehntel(sum(werte) / len(werte))
-    unter_4 = [n for n in werte if n < 4]
-    abweichung = sum(4 - n for n in unter_4)
-
-    gruende = []
-    if gesamtnote < REGELN["min_gesamt"]:
-        gruende.append(f"Gesamtnote {gesamtnote} ist unter 4.0")
-    if len(unter_4) > REGELN["max_unter_4"]:
-        gruende.append(f"{len(unter_4)} Fachnoten unter 4 (max. 2)")
-    if abweichung > REGELN["max_abweichung"]:
-        gruende.append(f"Abweichung unter 4 ist {abweichung} (max. 2.0)")
+    durchschnitt = runde_zehntel(sum(werte) / len(werte))
+    regeln = pruefe_regeln(regel, werte, durchschnitt)
 
     return {
         "fachnoten": fachnoten,
-        "gesamtnote": gesamtnote,
-        "bestanden": len(gruende) == 0,
-        "gruende": gruende,
+        "durchschnitt": durchschnitt,
+        "regeln": regeln,
+        "bestanden": all(ok for _, ok in regeln),
+        "ausgefuellt": len(fachnoten),
+        "total": len(noten),
     }

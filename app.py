@@ -1,43 +1,41 @@
 from flask import Flask, render_template, request
-from grading import AUSBILDUNGEN, berechne
+from grading import KATEGORIEN, berechne
 
 app = Flask(__name__)
 
 
 def lese_note(feldname):
     wert = request.form.get(feldname, "").strip().replace(",", ".")
-    return float(wert) if wert else None
+    try:
+        return float(wert)
+    except ValueError:
+        return None
 
 
 @app.route("/")
 def index():
-    return render_template("index.html", ausbildungen=AUSBILDUNGEN.keys())
+    return render_template("index.html", kategorien=KATEGORIEN)
 
 
-@app.route("/<ausbildung>", methods=["GET", "POST"])
-def rechner(ausbildung):
-    if ausbildung not in AUSBILDUNGEN:
-        return "Ausbildung nicht gefunden", 404
+@app.route("/<kategorie>", methods=["GET", "POST"])
+def rechner(kategorie):
+    if kategorie not in KATEGORIEN:
+        return "Kategorie nicht gefunden", 404
 
-    faecher = AUSBILDUNGEN[ausbildung]
+    info = KATEGORIEN[kategorie]
     resultat = None
 
     if request.method == "POST":
         noten = []
-        for fach in faecher:
+        for i, fach in enumerate(info["faecher"]):
             noten.append({
                 "name": fach["name"],
-                "erfahrungsnote": lese_note(fach["id"] + "_erfahrung"),
-                "pruefungsnote": lese_note(fach["id"] + "_pruefung"),
+                "erfahrungsnote": lese_note(f"e{i}"),
+                "pruefungsnote": lese_note(f"p{i}"),
             })
-        resultat = berechne(noten)
+        resultat = berechne(noten, info["regel"])
 
-    return render_template(
-        "rechner.html",
-        ausbildung=ausbildung,
-        faecher=faecher,
-        resultat=resultat,
-    )
+    return render_template("rechner.html", info=info, resultat=resultat)
 
 
 if __name__ == "__main__":

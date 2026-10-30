@@ -3,19 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Noten-BM-Rechner</title>
+    <title>Notenrechner Schweiz</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <main>
-        <h1>Noten-BM-Rechner</h1>
-        <p>Wähle deine Ausbildung:</p>
+    <header>
+        <div class="kreuz">+</div>
+        <h1>Notenrechner Schweiz</h1>
+        <p>Bestehe ich meinen Abschluss? Wähle deine Schule.</p>
+    </header>
 
+    <main>
+        <h2>Mittelschule</h2>
         <div class="auswahl">
-            {% for ausbildung in ausbildungen %}
-                <a class="karte" href="{{ url_for('rechner', ausbildung=ausbildung) }}">
-                    {{ ausbildung | upper }}
-                </a>
+            {% for key, k in kategorien.items() if k.gruppe == "Mittelschule" %}
+            <a class="karte" href="/{{ key }}">
+                <strong>{{ k.name }}</strong>
+                <span>{{ k.abschluss }}</span>
+            </a>
+            {% endfor %}
+        </div>
+
+        <h2>Berufslehre</h2>
+        <div class="auswahl">
+            {% for key, k in kategorien.items() if k.gruppe == "Berufslehre" %}
+            <a class="karte" href="/{{ key }}">
+                <strong>{{ k.name }}</strong>
+                <span>{{ k.abschluss }}</span>
+            </a>
             {% endfor %}
         </div>
     </main>

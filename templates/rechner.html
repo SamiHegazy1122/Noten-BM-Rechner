@@ -3,58 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Noten-BM-Rechner</title>
+    <title>{{ info.name }} – Notenrechner</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <header>
+        <a class="zurueck" href="/">← Zurück</a>
+        <h1>{{ info.name }}</h1>
+        <p>{{ info.abschluss }}</p>
+    </header>
+
     <main>
-        <a href="/">← Zurück</a>
-        <h1>{{ ausbildung | upper }}</h1>
+        <form method="post" class="box">
+            <div class="zeile kopf">
+                <span>Fach</span>
+                <span>Erfahrung</span>
+                <span>Prüfung</span>
+            </div>
 
-        <form method="post">
-            <table>
-                <tr>
-                    <th>Fach</th>
-                    <th>Erfahrung</th>
-                    <th>Prüfung</th>
-                </tr>
-
-                {% for fach in faecher %}
-                <tr>
-                    <td>{{ fach.name }}</td>
-                    <td>
-                        <input type="number" step="0.1" min="1" max="6"
-                               name="{{ fach.id }}_erfahrung"
-                               value="{{ request.form.get(fach.id + '_erfahrung', '') }}">
-                    </td>
-                    <td>
-                        {% if fach.pruefung %}
-                        <input type="number" step="0.1" min="1" max="6"
-                               name="{{ fach.id }}_pruefung"
-                               value="{{ request.form.get(fach.id + '_pruefung', '') }}">
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </table>
+            {% for fach in info.faecher %}
+            <div class="zeile">
+                <span>{{ fach.name }}</span>
+                <input type="number" step="any" min="1" max="6"
+                       name="e{{ loop.index0 }}"
+                       value="{{ request.form.get('e' ~ loop.index0, '') }}">
+                {% if fach.pruefung %}
+                <input type="number" step="any" min="1" max="6"
+                       name="p{{ loop.index0 }}"
+                       value="{{ request.form.get('p' ~ loop.index0, '') }}">
+                {% else %}
+                <span class="leer">–</span>
+                {% endif %}
+            </div>
+            {% endfor %}
 
             <button type="submit">Berechnen</button>
         </form>
 
         {% if resultat %}
-        <section class="resultat">
-            <h2>Gesamtnote: {{ resultat.gesamtnote }}</h2>
+        <section class="box resultat {{ 'bestanden' if resultat.bestanden else 'durchgefallen' }}">
+            <p class="status">
+                {{ 'Bestanden' if resultat.bestanden else 'Nicht bestanden' }}
+            </p>
+            <p class="schnitt">Ø {{ resultat.durchschnitt }}</p>
 
-            {% if resultat.bestanden %}
-                <p class="ok">Bestanden</p>
-            {% else %}
-                <p class="nok">Nicht bestanden</p>
-                {% for grund in resultat.gruende %}
-                    <p>- {{ grund }}</p>
-                {% endfor %}
+            {% if resultat.ausgefuellt < resultat.total %}
+            <p class="hinweis">
+                Erst {{ resultat.ausgefuellt }} von {{ resultat.total }} Fächern ausgefüllt.
+            </p>
             {% endif %}
+
+            <ul class="regeln">
+                {% for text, ok in resultat.regeln %}
+                <li class="{{ 'ok' if ok else 'nok' }}">{{ '✓' if ok else '✗' }} {{ text }}</li>
+                {% endfor %}
+            </ul>
+
+            <h3>Fachnoten</h3>
+            <ul class="fachnoten">
+                {% for name, note in resultat.fachnoten.items() %}
+                <li>
+                    <span>{{ name }}</span>
+                    <strong class="{{ 'nok' if note < 4 else '' }}">{{ note }}</strong>
+                </li>
+                {% endfor %}
+            </ul>
         </section>
         {% endif %}
+
+        <p class="fussnote">
+            Fachnote = Mittel aus Erfahrungs- und Prüfungsnote, auf halbe Noten gerundet.
+            Ohne Gewähr – Details im Reglement deiner Schule prüfen.
+        </p>
     </main>
 </body>
 </html>

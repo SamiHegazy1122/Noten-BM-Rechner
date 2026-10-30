@@ -1,8 +1,10 @@
 :root {
-    --akzent: #d52b1e;
-    --schwarz: #080808;
+    --schwarz: #111;
     --grau: #6b7280;
-    --linie: #eee;
+    --hellgrau: #f4f4f5;
+    --linie: #e4e4e7;
+    --rot: #d52b1e;
+    --gruen: #16a34a;
 }
 
 * { box-sizing: border-box; }
@@ -10,32 +12,39 @@
 body {
     margin: 0;
     font-family: system-ui, sans-serif;
-    background: white;
-    color: #111;
+    background: var(--hellgrau);
+    color: var(--schwarz);
 }
 
-header, main {
+header {
+    background: var(--schwarz);
+    color: white;
+    padding: 28px 16px;
+}
+
+header > * { max-width: 600px; margin-left: auto; margin-right: auto; }
+header h1 { margin-top: 8px; margin-bottom: 4px; }
+header p { color: #a1a1aa; margin-top: 0; margin-bottom: 0; }
+
+main {
     max-width: 600px;
     margin: 0 auto;
-    padding: 24px 16px;
+    padding: 16px;
 }
-
-main { padding-top: 0; }
-header h1 { margin: 8px 0 4px; }
-header p, .karte span, .fussnote, .hinweis { color: var(--grau); }
 
 .kreuz {
     display: inline-block;
-    background: var(--akzent);
+    background: var(--rot);
     color: white;
     font-weight: 900;
     padding: 2px 10px;
     border-radius: 6px;
 }
 
-a { color: var(--akzent); text-decoration: none; }
+a { color: inherit; text-decoration: none; }
+.zurueck { display: block; color: #a1a1aa; }
 
-h2 { font-size: 0.8rem; color: var(--grau); text-transform: uppercase; }
+h2 { font-size: 0.8rem; color: var(--grau); text-transform: uppercase; letter-spacing: 0.05em; }
 
 /* Startseite */
 .auswahl {
@@ -48,16 +57,24 @@ h2 { font-size: 0.8rem; color: var(--grau); text-transform: uppercase; }
     display: flex;
     flex-direction: column;
     padding: 16px;
+    background: white;
     border: 1px solid var(--linie);
-    border-radius: 14px;
-    color: #111;
+    border-radius: 12px;
     hyphens: auto;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
-.karte:hover { border-color: var(--akzent); }
+.karte span { color: var(--grau); font-size: 0.9rem; }
+.karte:hover { border-color: var(--schwarz); }
 
 /* Rechner */
+.box {
+    background: white;
+    border: 1px solid var(--linie);
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 16px;
+}
+
 .zeile {
     display: grid;
     grid-template-columns: 1fr 70px 70px;
@@ -73,9 +90,12 @@ input {
     width: 100%;
     padding: 8px;
     text-align: center;
-    border: 1px solid #ddd;
+    background: var(--hellgrau);
+    border: 1px solid var(--linie);
     border-radius: 8px;
 }
+
+input:focus { outline: 2px solid var(--schwarz); }
 
 .leer { text-align: center; color: var(--grau); }
 
@@ -83,31 +103,30 @@ button {
     width: 100%;
     margin-top: 16px;
     padding: 14px;
-    background: var(--akzent);
+    background: var(--schwarz);
     color: white;
     border: none;
-    border-radius: 12px;
+    border-radius: 10px;
     font-weight: bold;
     cursor: pointer;
 }
 
+button:hover { background: #333; }
+
 /* Resultat */
-.resultat {
-    margin-top: 24px;
-    padding: 20px;
-    border-radius: 14px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-}
+.bestanden { border-left: 5px solid var(--gruen); }
+.durchgefallen { border-left: 5px solid var(--rot); }
 
 .status { font-weight: bold; margin: 0; }
 .bestanden .status { color: var(--gruen); }
-.durchgefallen .status { color: var(--akzent); }
+.durchgefallen .status { color: var(--rot); }
 .schnitt { font-size: 2.5rem; font-weight: bold; margin: 4px 0; }
 
 ul { list-style: none; padding: 0; }
 .fachnoten li { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--linie); }
 
 .ok { color: var(--gruen); }
-.nok { color: var(--akzent); }
+.nok { color: var(--rot); }
 
+.hinweis, .fussnote { color: var(--grau); }
 .fussnote { font-size: 0.8rem; text-align: center; }
